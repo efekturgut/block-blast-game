@@ -1,12 +1,18 @@
-import React from 'react'
-import Cell from './Cell'
+import Cell from "./Cell";
 
-export default function Board({ cells, onCellClick }) {
+const Board = ({ board = [] }) => {
   return (
     <div className="board">
-      {cells.map((cell, index) => (
-        <Cell key={index} value={cell} onClick={() => onCellClick(index)} />
-      ))}
+      {board.map((row, rowIndex) =>
+        row.map((cell, colIndex) => (
+          <Cell
+            key={`${rowIndex}-${colIndex}`}
+            value={cell}
+          />
+        ))
+      )}
     </div>
-  )
-}
+  );
+};
+
+export default Board;

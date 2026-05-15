@@ -48,3 +48,86 @@ body {
   background: #4f8cff;
   border-color: #75a6ff;
 }
+
+.block-tray {
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  min-height: 120px;
+}
+
+.block {
+  min-width: 120px;
+  min-height: 100px;
+  background: #181b2c;
+  border: 2px solid #30364f;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.block:hover {
+  transform: translateY(-4px);
+  border-color: #4f8cff;
+}
+
+.block.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 4px rgba(79, 140, 255, 0.35);
+  transform: translateY(-6px);
+}
+
+.block-grid {
+  display: grid;
+  gap: 4px;
+}
+
+.block-cell {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.block-cell.empty {
+  background: transparent;
+}
+
+.block-cell.blue {
+  background: #4f8cff;
+}
+
+.block-cell.green {
+  background: #48d597;
+}
+
+.block-cell.orange {
+  background: #ff9f43;
+}
+
+.block-cell.purple {
+  background: #9b5cff;
+}
+
+.block-cell.red {
+  background: #ff5c7a;
+}
+
+.block-cell.yellow {
+  background: #ffd93d;
+}
+
+.block-cell.cyan {
+  background: #4ddfff;
+}
+
+.block-cell.pink {
+  background: #ff6ec7;
+}
+
+.block-cell.teal {
+  background: #2dd4bf;
+}
