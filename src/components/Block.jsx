@@ -1,9 +1,40 @@
-const Block = ({ block, isSelected, onSelect }) => {
+const Block = ({ block }) => {
+  const handleDragStart = (e) => {
+    const targetCell = e.target.closest(".block-cell");
+
+    const offsetRow = Number(targetCell?.dataset.row || 0);
+    const offsetCol = Number(targetCell?.dataset.col || 0);
+
+    e.dataTransfer.setData(
+      "block",
+      JSON.stringify({
+        ...block,
+        offsetRow,
+        offsetCol,
+      })
+    );
+
+    const blockGrid = e.currentTarget.querySelector(".block-grid");
+    const dragGhost = blockGrid.cloneNode(true);
+
+    dragGhost.classList.add("drag-ghost");
+    document.body.appendChild(dragGhost);
+
+    const cellSize = 36;
+
+    e.dataTransfer.setDragImage(
+      dragGhost,
+      offsetCol * cellSize + 16,
+      offsetRow * cellSize + 16
+    );
+
+    setTimeout(() => {
+      document.body.removeChild(dragGhost);
+    }, 0);
+  };
+
   return (
-    <div
-      className={`block ${isSelected ? "selected" : ""}`}
-      onClick={() => onSelect(block)}
-    >
+    <div className="block" draggable onDragStart={handleDragStart}>
       <div
         className="block-grid"
         style={{
@@ -15,6 +46,8 @@ const Block = ({ block, isSelected, onSelect }) => {
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
+              data-row={rowIndex}
+              data-col={colIndex}
               className={`block-cell ${cell === 1 ? block.color : "empty"}`}
             ></div>
           ))

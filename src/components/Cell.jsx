@@ -1,6 +1,25 @@
-const Cell = ({ value }) => {
+const Cell = ({ value, previewColor, isInvalidPreview, onDrop, onDragOver, onDragLeave }) => {
+  let className = "cell";
+
+  if (value !== 0) {
+    className += ` filled ${value}`;
+  }
+
+  if (previewColor) {
+    className += ` preview ${previewColor}`;
+  }
+
+  if (isInvalidPreview) {
+    className += " invalid-preview";
+  }
+
   return (
-    <div className={`cell ${value === 1 ? "filled" : ""}`}></div>
+    <div
+      className={className}
+      onDragOver={onDragOver}
+      onDragLeave={onDragLeave}
+      onDrop={onDrop}
+    ></div>
   );
 };
 
