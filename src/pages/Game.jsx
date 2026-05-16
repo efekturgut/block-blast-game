@@ -9,12 +9,45 @@ const Game = () => {
   };
 
   const getRandomBlocks = () => {
+    const comboSets = [
+      [10, 10, 11],
+      [10, 12, 4],
+      [1, 11, 13],
+      [8, 13, 4],
+      [9, 5, 4],
+      [3, 6, 4],
+      [12, 11, 1],
+      [14, 15, 4],
+    ];
+
+    const shouldUseComboSet = Math.random() < 0.55;
+
+    if (shouldUseComboSet) {
+      const randomSet =
+        comboSets[Math.floor(Math.random() * comboSets.length)];
+
+      return randomSet.map((id, index) => {
+        const shape = blockShapes.find((block) => block.id === id);
+
+        return {
+          ...shape,
+          instanceId: `${shape.id}-${Date.now()}-${index}`,
+        };
+      });
+    }
+
     const shuffled = [...blockShapes].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 3);
+
+    return shuffled.slice(0, 3).map((shape, index) => ({
+      ...shape,
+      instanceId: `${shape.id}-${Date.now()}-${index}`,
+    }));
   };
 
   const [board, setBoard] = useState(createEmptyBoard());
   const [availableBlocks, setAvailableBlocks] = useState(getRandomBlocks());
+  const [score, setScore] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   const [previewCells, setPreviewCells] = useState([]);
   const [invalidPreviewCells, setInvalidPreviewCells] = useState([]);
@@ -37,7 +70,7 @@ const Game = () => {
     return cells;
   };
 
-  const canPlaceBlock = (block, startRow, startCol) => {
+  const canPlaceBlock = (block, startRow, startCol, currentBoard = board) => {
     const cells = getBlockCells(block, startRow, startCol);
 
     for (const cell of cells) {
@@ -46,7 +79,7 @@ const Game = () => {
         cell.row >= 8 ||
         cell.col < 0 ||
         cell.col >= 8 ||
-        board[cell.row][cell.col] !== 0
+        currentBoard[cell.row][cell.col] !== 0
       ) {
         return false;
       }
@@ -55,15 +88,98 @@ const Game = () => {
     return true;
   };
 
+  const canPlaceBlockAnywhere = (block, currentBoard) => {
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (canPlaceBlock(block, row, col, currentBoard)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  const checkGameOver = (blocks, currentBoard) => {
+    const hasMove = blocks.some((block) =>
+      canPlaceBlockAnywhere(block, currentBoard)
+    );
+
+    if (!hasMove) {
+      setIsGameOver(true);
+    }
+  };
+
+  const clearFullLines = (currentBoard) => {
+    const newBoard = currentBoard.map((row) => [...row]);
+
+    const fullRows = [];
+    const fullCols = [];
+
+    for (let row = 0; row < 8; row++) {
+      const isFullRow = newBoard[row].every((cell) => cell !== 0);
+
+      if (isFullRow) {
+        fullRows.push(row);
+      }
+    }
+
+    for (let col = 0; col < 8; col++) {
+      let isFullCol = true;
+
+      for (let row = 0; row < 8; row++) {
+        if (newBoard[row][col] === 0) {
+          isFullCol = false;
+          break;
+        }
+      }
+
+      if (isFullCol) {
+        fullCols.push(col);
+      }
+    }
+
+    let clearedCellCount = 0;
+
+    for (const row of fullRows) {
+      for (let col = 0; col < 8; col++) {
+        if (newBoard[row][col] !== 0) {
+          newBoard[row][col] = 0;
+          clearedCellCount++;
+        }
+      }
+    }
+
+    for (const col of fullCols) {
+      for (let row = 0; row < 8; row++) {
+        if (newBoard[row][col] !== 0) {
+          newBoard[row][col] = 0;
+          clearedCellCount++;
+        }
+      }
+    }
+
+    if (clearedCellCount > 0) {
+      setScore((prevScore) => prevScore + clearedCellCount * 10);
+    }
+
+    return newBoard;
+  };
+
   const placeBlock = (block, startRow, startCol) => {
-    const newBoard = board.map((row) => [...row]);
+    let newBoard = board.map((row) => [...row]);
     const cells = getBlockCells(block, startRow, startCol);
 
     for (const cell of cells) {
       newBoard[cell.row][cell.col] = block.color;
     }
 
+    setScore((prevScore) => prevScore + cells.length);
+
+    newBoard = clearFullLines(newBoard);
+
     setBoard(newBoard);
+    return newBoard;
   };
 
   const clearPreview = () => {
@@ -72,72 +188,85 @@ const Game = () => {
     setPreviewColor(null);
   };
 
-const handleBlockDragOver = (e, rowIndex, colIndex) => {
-  e.preventDefault();
+  const handleBlockDragOver = (e, rowIndex, colIndex) => {
+    e.preventDefault();
 
-  const blockData = e.dataTransfer.getData("block");
-  if (!blockData) return;
+    if (isGameOver) return;
 
-  const draggedBlock = JSON.parse(blockData);
+    const blockData = e.dataTransfer.getData("block");
+    if (!blockData) return;
 
-  const startRow = rowIndex - draggedBlock.offsetRow;
-  const startCol = colIndex - draggedBlock.offsetCol;
+    const draggedBlock = JSON.parse(blockData);
 
-  const cells = getBlockCells(draggedBlock, startRow, startCol);
-  const canPlace = canPlaceBlock(draggedBlock, startRow, startCol);
+    const startRow = rowIndex - (draggedBlock.offsetRow || 0);
+    const startCol = colIndex - (draggedBlock.offsetCol || 0);
 
-  if (canPlace) {
-    setPreviewCells(cells);
-    setInvalidPreviewCells([]);
-    setPreviewColor(draggedBlock.color);
-  } else {
-    setPreviewCells([]);
-    setInvalidPreviewCells(cells);
-    setPreviewColor(null);
-  }
-};
+    const cells = getBlockCells(draggedBlock, startRow, startCol);
+    const canPlace = canPlaceBlock(draggedBlock, startRow, startCol);
+
+    if (canPlace) {
+      setPreviewCells(cells);
+      setInvalidPreviewCells([]);
+      setPreviewColor(draggedBlock.color);
+    } else {
+      setPreviewCells([]);
+      setInvalidPreviewCells(cells);
+      setPreviewColor(null);
+    }
+  };
 
   const handleBlockDragLeave = () => {
-    // Çok hızlı temizlemesin diye boş bırakıyoruz.
-    // Drop veya yeni dragOver zaten preview'i güncelliyor.
+    // Drag sırasında titreme olmasın diye boş bırakıyoruz.
   };
-const handleBlockDrop = (e, rowIndex, colIndex) => {
-  e.preventDefault();
 
-  const blockData = e.dataTransfer.getData("block");
-  if (!blockData) return;
+  const handleBlockDrop = (e, rowIndex, colIndex) => {
+    e.preventDefault();
 
-  const droppedBlock = JSON.parse(blockData);
+    if (isGameOver) return;
 
-  const startRow = rowIndex - droppedBlock.offsetRow;
-  const startCol = colIndex - droppedBlock.offsetCol;
+    const blockData = e.dataTransfer.getData("block");
+    if (!blockData) return;
 
-  const canPlace = canPlaceBlock(droppedBlock, startRow, startCol);
+    const droppedBlock = JSON.parse(blockData);
 
-  if (!canPlace) {
-    clearPreview();
-    return;
-  }
+    const startRow = rowIndex - (droppedBlock.offsetRow || 0);
+    const startCol = colIndex - (droppedBlock.offsetCol || 0);
 
-  placeBlock(droppedBlock, startRow, startCol);
-  clearPreview();
+    const canPlace = canPlaceBlock(droppedBlock, startRow, startCol);
 
-  setAvailableBlocks((prevBlocks) => {
-    const updatedBlocks = prevBlocks.filter(
-      (block) => block.id !== droppedBlock.id
-    );
-
-    if (updatedBlocks.length === 0) {
-      return getRandomBlocks();
+    if (!canPlace) {
+      clearPreview();
+      return;
     }
 
-    return updatedBlocks;
-  });
-};
+    const updatedBoard = placeBlock(droppedBlock, startRow, startCol);
+    clearPreview();
+
+    setAvailableBlocks((prevBlocks) => {
+      let updatedBlocks = prevBlocks.filter(
+        (block) => block.instanceId !== droppedBlock.instanceId
+      );
+
+      if (updatedBlocks.length === 0) {
+        updatedBlocks = getRandomBlocks();
+      }
+
+      setTimeout(() => {
+        checkGameOver(updatedBlocks, updatedBoard);
+      }, 0);
+
+      return updatedBlocks;
+    });
+  };
 
   return (
     <main className="game-page">
       <h1>Block Blast</h1>
+
+      <div className="score-box">
+        <span>Skor</span>
+        <strong>{score}</strong>
+      </div>
 
       <div className="game-container">
         <Board
@@ -150,7 +279,14 @@ const handleBlockDrop = (e, rowIndex, colIndex) => {
           onBlockDrop={handleBlockDrop}
         />
 
-        <BlockTray blocks={availableBlocks} />
+        {!isGameOver && <BlockTray blocks={availableBlocks} />}
+
+        {isGameOver && (
+          <div className="game-over-box">
+            <h2>Oyun Bitti</h2>
+            <p>Skorun: {score}</p>
+          </div>
+        )}
       </div>
     </main>
   );
