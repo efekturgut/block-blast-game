@@ -439,3 +439,28 @@ body {
 .restart-game-btn:active {
   transform: scale(0.96);
 }
+.cell.clearing {
+  animation: clearPop 0.26s ease forwards;
+  box-shadow: 0 0 18px rgba(255, 255, 255, 0.85);
+  z-index: 2;
+}
+
+@keyframes clearPop {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+    filter: brightness(1);
+  }
+
+  45% {
+    transform: scale(1.12);
+    opacity: 1;
+    filter: brightness(1.8);
+  }
+
+  100% {
+    transform: scale(0.25);
+    opacity: 0;
+    filter: brightness(2);
+  }
+}

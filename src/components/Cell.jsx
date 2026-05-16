@@ -1,4 +1,12 @@
-const Cell = ({ value, previewColor, isInvalidPreview, onDrop, onDragOver, onDragLeave }) => {
+const Cell = ({
+  value,
+  previewColor,
+  isInvalidPreview,
+  isClearing,
+  onDrop,
+  onDragOver,
+  onDragLeave,
+}) => {
   let className = "cell";
 
   if (value !== 0) {
@@ -11,6 +19,10 @@ const Cell = ({ value, previewColor, isInvalidPreview, onDrop, onDragOver, onDra
 
   if (isInvalidPreview) {
     className += " invalid-preview";
+  }
+
+  if (isClearing) {
+    className += " clearing";
   }
 
   return (

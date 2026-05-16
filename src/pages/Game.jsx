@@ -54,6 +54,7 @@ const Game = () => {
   const [previewColor, setPreviewColor] = useState(null);
 
   const [bonusText, setBonusText] = useState("");
+  const [clearingCells, setClearingCells] = useState([]);
 
   const getBlockCells = (block, startRow, startCol) => {
     const cells = [];
@@ -120,94 +121,106 @@ const Game = () => {
     }, 1200);
   };
 
-  const clearFullLines = (currentBoard) => {
-    const newBoard = currentBoard.map((row) => [...row]);
+ const clearFullLines = (currentBoard) => {
+  const newBoard = currentBoard.map((row) => [...row]);
 
-    const fullRows = [];
-    const fullCols = [];
+  const fullRows = [];
+  const fullCols = [];
+
+  for (let row = 0; row < 8; row++) {
+    const isFullRow = newBoard[row].every((cell) => cell !== 0);
+
+    if (isFullRow) {
+      fullRows.push(row);
+    }
+  }
+
+  for (let col = 0; col < 8; col++) {
+    let isFullCol = true;
 
     for (let row = 0; row < 8; row++) {
-      const isFullRow = newBoard[row].every((cell) => cell !== 0);
-
-      if (isFullRow) {
-        fullRows.push(row);
+      if (newBoard[row][col] === 0) {
+        isFullCol = false;
+        break;
       }
     }
 
+    if (isFullCol) {
+      fullCols.push(col);
+    }
+  }
+
+  const cellsToClear = [];
+
+  for (const row of fullRows) {
     for (let col = 0; col < 8; col++) {
-      let isFullCol = true;
-
-      for (let row = 0; row < 8; row++) {
-        if (newBoard[row][col] === 0) {
-          isFullCol = false;
-          break;
-        }
-      }
-
-      if (isFullCol) {
-        fullCols.push(col);
-      }
+      cellsToClear.push({ row, col });
     }
+  }
 
-    let clearedCellCount = 0;
-
-    for (const row of fullRows) {
-      for (let col = 0; col < 8; col++) {
-        if (newBoard[row][col] !== 0) {
-          newBoard[row][col] = 0;
-          clearedCellCount++;
-        }
-      }
-    }
-
-    for (const col of fullCols) {
-      for (let row = 0; row < 8; row++) {
-        if (newBoard[row][col] !== 0) {
-          newBoard[row][col] = 0;
-          clearedCellCount++;
-        }
-      }
-    }
-
-    if (clearedCellCount > 0) {
-      const isBoardCompletelyEmpty = newBoard.every((row) =>
-        row.every((cell) => cell === 0)
+  for (const col of fullCols) {
+    for (let row = 0; row < 8; row++) {
+      const alreadyAdded = cellsToClear.some(
+        (cell) => cell.row === row && cell.col === col
       );
 
-      setScore((prevScore) => {
-        let extraScore = clearedCellCount * 10;
-
-        if (isBoardCompletelyEmpty) {
-          extraScore += 500;
-        }
-
-        return prevScore + extraScore;
-      });
-
-      if (isBoardCompletelyEmpty) {
-        showBonusText("FULL CLEAR +500");
+      if (!alreadyAdded) {
+        cellsToClear.push({ row, col });
       }
     }
+  }
 
+  if (cellsToClear.length === 0) {
     return newBoard;
-  };
+  }
 
-  const placeBlock = (block, startRow, startCol) => {
-    let newBoard = board.map((row) => [...row]);
-    const cells = getBlockCells(block, startRow, startCol);
+  setClearingCells(cellsToClear);
 
-    for (const cell of cells) {
-      newBoard[cell.row][cell.col] = block.color;
+  for (const cell of cellsToClear) {
+    newBoard[cell.row][cell.col] = 0;
+  }
+
+  const isBoardCompletelyEmpty = newBoard.every((row) =>
+    row.every((cell) => cell === 0)
+  );
+
+  setScore((prevScore) => {
+    let extraScore = cellsToClear.length * 10;
+
+    if (isBoardCompletelyEmpty) {
+      extraScore += 500;
     }
 
-    setScore((prevScore) => prevScore + cells.length);
+    return prevScore + extraScore;
+  });
 
-    newBoard = clearFullLines(newBoard);
+  if (isBoardCompletelyEmpty) {
+    showBonusText("FULL CLEAR +500");
+  }
 
+  setTimeout(() => {
+    setClearingCells([]);
     setBoard(newBoard);
-    return newBoard;
-  };
+  }, 260);
 
+  return currentBoard;
+};
+
+const placeBlock = (block, startRow, startCol) => {
+  let newBoard = board.map((row) => [...row]);
+  const cells = getBlockCells(block, startRow, startCol);
+
+  for (const cell of cells) {
+    newBoard[cell.row][cell.col] = block.color;
+  }
+
+  setScore((prevScore) => prevScore + cells.length);
+
+  const boardAfterClearCheck = clearFullLines(newBoard);
+
+  setBoard(boardAfterClearCheck);
+  return boardAfterClearCheck;
+};
   const clearPreview = () => {
     setPreviewCells([]);
     setInvalidPreviewCells([]);
@@ -308,6 +321,7 @@ const handleRestartGame = () => {
           board={board}
           previewCells={previewCells}
           invalidPreviewCells={invalidPreviewCells}
+           clearingCells={clearingCells}
           previewColor={previewColor}
           onBlockDragOver={handleBlockDragOver}
           onBlockDragLeave={handleBlockDragLeave}

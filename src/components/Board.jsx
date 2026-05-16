@@ -4,6 +4,7 @@ const Board = ({
   board = [],
   previewCells = [],
   invalidPreviewCells = [],
+  clearingCells = [],
   previewColor,
   onBlockDragOver,
   onBlockDragLeave,
@@ -17,6 +18,10 @@ const Board = ({
     return invalidPreviewCells.some((cell) => cell.row === row && cell.col === col);
   };
 
+  const isClearingCell = (row, col) => {
+    return clearingCells.some((cell) => cell.row === row && cell.col === col);
+  };
+
   return (
     <div className="board">
       {board.map((row, rowIndex) =>
@@ -26,6 +31,7 @@ const Board = ({
             value={cell}
             previewColor={isPreviewCell(rowIndex, colIndex) ? previewColor : null}
             isInvalidPreview={isInvalidPreviewCell(rowIndex, colIndex)}
+            isClearing={isClearingCell(rowIndex, colIndex)}
             onDragOver={(e) => onBlockDragOver(e, rowIndex, colIndex)}
             onDragLeave={onBlockDragLeave}
             onDrop={(e) => onBlockDrop(e, rowIndex, colIndex)}
