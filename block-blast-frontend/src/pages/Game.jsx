@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Board from "../components/Board";
 import BlockTray from "../components/BlockTray";
 import { blockShapes } from "../data/blockShapes";
 import { saveScore } from "../services/scoreService";
+import { useAuth } from "../context/AuthContext";
+
 import {
   playPlaceSound,
   playClearSound,
@@ -135,9 +137,11 @@ const [availableBlocks, setAvailableBlocks] = useState(() =>
 );
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
-  const [playerName, setPlayerName] = useState("");
-const [scoreSaved, setScoreSaved] = useState(false);
-const [saveMessage, setSaveMessage] = useState("");
+
+  const { user, token } = useAuth();
+  const [scoreSaved, setScoreSaved] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+
 
   const [previewCells, setPreviewCells] = useState([]);
   const [invalidPreviewCells, setInvalidPreviewCells] = useState([]);
@@ -435,13 +439,13 @@ const handleTouchDrop = (droppedBlock, rowIndex, colIndex) => {
 
 
 const handleSaveScore = async () => {
-  if (!playerName.trim()) {
-    setSaveMessage("Lütfen oyuncu adını yaz.");
+  if (!isAuthenticated) {
+    setSaveMessage("Skor kaydetmek için giriş yapmalısın.");
     return;
   }
 
   try {
-    await saveScore(playerName, score);
+    await saveScore(score);
 
     setScoreSaved(true);
     setSaveMessage("Skor başarıyla kaydedildi.");
@@ -451,14 +455,13 @@ const handleSaveScore = async () => {
   }
 };
 
-
 const handleRestartGame = () => {
   setBoard(createEmptyBoard());
   setAvailableBlocks(getSmartBlocks(createEmptyBoard()));
   setScore(0);
   setIsGameOver(false);
   setBonusText("");
-  setPlayerName("");
+  
   setScoreSaved(false);
   setSaveMessage("");
   clearPreview();
@@ -495,14 +498,15 @@ const handleRestartGame = () => {
     <h2>Oyun Bitti</h2>
     <p>Skorun: {score}</p>
 
-    <input
-      className="player-name-input"
-      type="text"
-      placeholder="Oyuncu adın"
-      value={playerName}
-      onChange={(e) => setPlayerName(e.target.value)}
-      disabled={scoreSaved}
-    />
+    {isAuthenticated ? (
+      <p className="logged-user-score">
+        Skor şu kullanıcıya kaydedilecek: <strong>{user.username}</strong>
+      </p>
+    ) : (
+      <p className="logged-user-score">
+        Skor kaydetmek için giriş yapmalısın.
+      </p>
+    )}
 
     <button
       className="save-score-btn"

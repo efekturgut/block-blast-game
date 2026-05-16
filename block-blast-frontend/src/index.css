@@ -938,3 +938,163 @@ body {
   color: #ffd93d;
   font-weight: 700;
 }
+.navbar {
+  width: min(900px, calc(100% - 24px));
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  background: #22263a;
+  border: 2px solid #30364f;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-logo {
+  color: white;
+  font-size: 22px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-link {
+  color: #aeb7d8;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.navbar-user {
+  color: #ffd93d;
+  font-weight: 800;
+}
+
+.navbar-btn {
+  border: none;
+  background: #4f8cff;
+  color: white;
+  text-decoration: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.auth-page {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 14px;
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  background: #22263a;
+  border: 2px solid #30364f;
+  border-radius: 24px;
+  padding: 28px;
+  text-align: center;
+}
+
+.auth-card h1 {
+  margin: 0 0 10px;
+  font-size: 34px;
+}
+
+.auth-card p {
+  color: #aeb7d8;
+}
+
+.auth-form {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth-form input {
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 2px solid #465073;
+  background: #181b2c;
+  color: white;
+  font-size: 16px;
+  outline: none;
+}
+
+.auth-form input:focus {
+  border-color: #4f8cff;
+}
+
+.auth-form button {
+  margin-top: 6px;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: #48d597;
+  color: #101525;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.auth-message {
+  margin-top: 16px;
+  color: #ffd93d;
+  font-weight: 800;
+}
+
+.auth-footer {
+  display: block;
+  margin-top: 18px;
+  color: #aeb7d8;
+}
+
+.auth-footer a {
+  color: #4f8cff;
+  font-weight: 800;
+}
+
+.logged-user-score {
+  color: #aeb7d8;
+  margin-top: 10px;
+}
+
+.logged-user-score strong {
+  color: #ffd93d;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 16px;
+  }
+
+  .navbar-logo {
+    font-size: 18px;
+  }
+
+  .navbar-links {
+    gap: 8px;
+  }
+
+  .navbar-user {
+    font-size: 13px;
+  }
+
+  .navbar-link,
+  .navbar-btn {
+    font-size: 13px;
+  }
+
+  .navbar-btn {
+    padding: 8px 12px;
+  }
+}
