@@ -3,9 +3,14 @@ import pool from "../config/db.js";
 export const getScores = async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT id, player_name, score, created_at
-      FROM scores
-      ORDER BY score DESC
+      SELECT 
+        s.id,
+        s.score,
+        s.created_at,
+        u.username
+      FROM scores s
+      JOIN users u ON u.id = s.user_id
+      ORDER BY s.score DESC
       LIMIT 10
     `);
 
@@ -25,22 +30,23 @@ export const getScores = async (req, res) => {
 
 export const createScore = async (req, res) => {
   try {
-    const { playerName, score } = req.body;
+    const { score } = req.body;
+    const userId = req.user.id;
 
-    if (!playerName || score === undefined) {
+    if (score === undefined) {
       return res.status(400).json({
         success: false,
-        message: "Oyuncu adı ve skor zorunludur.",
+        message: "Skor zorunludur.",
       });
     }
 
     const result = await pool.query(
       `
-      INSERT INTO scores (player_name, score)
-      VALUES ($1, $2)
-      RETURNING id, player_name, score, created_at
+      INSERT INTO scores (user_id, player_name, score)
+      VALUES ($1, $2, $3)
+      RETURNING *
       `,
-      [playerName, score]
+      [userId, req.user.username, score]
     );
 
     res.status(201).json({
