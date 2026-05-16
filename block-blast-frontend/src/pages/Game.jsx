@@ -2,6 +2,7 @@ import { useState } from "react";
 import Board from "../components/Board";
 import BlockTray from "../components/BlockTray";
 import { blockShapes } from "../data/blockShapes";
+import { saveScore } from "../services/scoreService";
 import {
   playPlaceSound,
   playClearSound,
@@ -134,6 +135,9 @@ const [availableBlocks, setAvailableBlocks] = useState(() =>
 );
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [playerName, setPlayerName] = useState("");
+const [scoreSaved, setScoreSaved] = useState(false);
+const [saveMessage, setSaveMessage] = useState("");
 
   const [previewCells, setPreviewCells] = useState([]);
   const [invalidPreviewCells, setInvalidPreviewCells] = useState([]);
@@ -430,15 +434,33 @@ const handleTouchDrop = (droppedBlock, rowIndex, colIndex) => {
 
 
 
+const handleSaveScore = async () => {
+  if (!playerName.trim()) {
+    setSaveMessage("Lütfen oyuncu adını yaz.");
+    return;
+  }
 
+  try {
+    await saveScore(playerName, score);
+
+    setScoreSaved(true);
+    setSaveMessage("Skor başarıyla kaydedildi.");
+  } catch (error) {
+    console.error("Skor kaydedilemedi:", error);
+    setSaveMessage("Skor kaydedilemedi.");
+  }
+};
 
 
 const handleRestartGame = () => {
   setBoard(createEmptyBoard());
- setAvailableBlocks(getSmartBlocks(createEmptyBoard()));
+  setAvailableBlocks(getSmartBlocks(createEmptyBoard()));
   setScore(0);
   setIsGameOver(false);
   setBonusText("");
+  setPlayerName("");
+  setScoreSaved(false);
+  setSaveMessage("");
   clearPreview();
 };
   return (
@@ -468,10 +490,29 @@ const handleRestartGame = () => {
   <BlockTray blocks={availableBlocks} onTouchDrop={handleTouchDrop} />
 )}
 
-       {isGameOver && (
+{isGameOver && (
   <div className="game-over-box">
     <h2>Oyun Bitti</h2>
     <p>Skorun: {score}</p>
+
+    <input
+      className="player-name-input"
+      type="text"
+      placeholder="Oyuncu adın"
+      value={playerName}
+      onChange={(e) => setPlayerName(e.target.value)}
+      disabled={scoreSaved}
+    />
+
+    <button
+      className="save-score-btn"
+      onClick={handleSaveScore}
+      disabled={scoreSaved}
+    >
+      {scoreSaved ? "Skor Kaydedildi" : "Skoru Kaydet"}
+    </button>
+
+    {saveMessage && <p className="save-message">{saveMessage}</p>}
 
     <button className="restart-game-btn" onClick={handleRestartGame}>
       Tekrar Başla

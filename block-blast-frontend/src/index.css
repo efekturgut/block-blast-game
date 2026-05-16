@@ -886,3 +886,55 @@ body {
     border-radius: 6px;
   }
 }
+
+.player-name-input {
+  width: 100%;
+  max-width: 260px;
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 2px solid #465073;
+  background: #181b2c;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+}
+
+.player-name-input::placeholder {
+  color: #9fa8c9;
+}
+
+.player-name-input:focus {
+  border-color: #4f8cff;
+}
+
+.save-score-btn {
+  margin-top: 12px;
+  padding: 12px 26px;
+  border: none;
+  border-radius: 999px;
+  background: #48d597;
+  color: #101525;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.save-score-btn:hover {
+  background: #75e8b5;
+  transform: translateY(-2px);
+}
+
+.save-score-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.save-message {
+  margin: 10px 0 0;
+  color: #ffd93d;
+  font-weight: 700;
+}
