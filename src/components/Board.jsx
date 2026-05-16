@@ -15,7 +15,9 @@ const Board = ({
   };
 
   const isInvalidPreviewCell = (row, col) => {
-    return invalidPreviewCells.some((cell) => cell.row === row && cell.col === col);
+    return invalidPreviewCells.some(
+      (cell) => cell.row === row && cell.col === col
+    );
   };
 
   const isClearingCell = (row, col) => {
@@ -29,6 +31,8 @@ const Board = ({
           <Cell
             key={`${rowIndex}-${colIndex}`}
             value={cell}
+            rowIndex={rowIndex}
+            colIndex={colIndex}
             previewColor={isPreviewCell(rowIndex, colIndex) ? previewColor : null}
             isInvalidPreview={isInvalidPreviewCell(rowIndex, colIndex)}
             isClearing={isClearingCell(rowIndex, colIndex)}

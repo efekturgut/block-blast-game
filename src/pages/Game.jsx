@@ -10,48 +10,128 @@ import {
 } from "../utils/soundEffects";
 
 const Game = () => {
+
   const createEmptyBoard = () => {
     return Array.from({ length: 8 }, () => Array(8).fill(0));
   };
 
-  const getRandomBlocks = () => {
-    const comboSets = [
-      [10, 10, 11],
-      [10, 12, 4],
-      [1, 11, 13],
-      [8, 13, 4],
-      [9, 5, 4],
-      [3, 6, 4],
-      [12, 11, 1],
-      [14, 15, 4],
-    ];
-
-    const shouldUseComboSet = Math.random() < 0.55;
-
-    if (shouldUseComboSet) {
-      const randomSet =
-        comboSets[Math.floor(Math.random() * comboSets.length)];
-
-      return randomSet.map((id, index) => {
-        const shape = blockShapes.find((block) => block.id === id);
-
-        return {
-          ...shape,
-          instanceId: `${shape.id}-${Date.now()}-${index}`,
-        };
-      });
-    }
-
-    const shuffled = [...blockShapes].sort(() => Math.random() - 0.5);
-
-    return shuffled.slice(0, 3).map((shape, index) => ({
-      ...shape,
-      instanceId: `${shape.id}-${Date.now()}-${index}`,
-    }));
+  const createBlockInstance = (shape, index) => {
+  return {
+    ...shape,
+    instanceId: `${shape.id}-${Date.now()}-${Math.random()}-${index}`,
   };
+};
+
+const canBlockFitAnywhereOnBoard = (block, currentBoard) => {
+  for (let row = 0; row < 8; row++) {
+    for (let col = 0; col < 8; col++) {
+      const cells = [];
+
+      for (let shapeRow = 0; shapeRow < block.shape.length; shapeRow++) {
+        for (
+          let shapeCol = 0;
+          shapeCol < block.shape[shapeRow].length;
+          shapeCol++
+        ) {
+          if (block.shape[shapeRow][shapeCol] === 1) {
+            cells.push({
+              row: row + shapeRow,
+              col: col + shapeCol,
+            });
+          }
+        }
+      }
+
+      const canFit = cells.every(
+        (cell) =>
+          cell.row >= 0 &&
+          cell.row < 8 &&
+          cell.col >= 0 &&
+          cell.col < 8 &&
+          currentBoard[cell.row][cell.col] === 0
+      );
+
+      if (canFit) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+const getPlayableBlocks = (currentBoard) => {
+  return blockShapes.filter((block) =>
+    canBlockFitAnywhereOnBoard(block, currentBoard)
+  );
+};
+
+const getSmartBlocks = (currentBoard) => {
+  const comboSets = [
+    [10, 10, 11],
+    [10, 12, 4],
+    [1, 11, 13],
+    [8, 13, 4],
+    [9, 5, 4],
+    [3, 6, 4],
+    [12, 11, 1],
+    [14, 15, 4],
+  ];
+
+  const playableBlocks = getPlayableBlocks(currentBoard);
+
+  if (playableBlocks.length === 0) {
+    return [];
+  }
+
+  const shouldTryComboSet = Math.random() < 0.55;
+
+  if (shouldTryComboSet) {
+    const shuffledComboSets = [...comboSets].sort(() => Math.random() - 0.5);
+
+    for (const comboSet of shuffledComboSets) {
+      const comboBlocks = comboSet
+        .map((id) => blockShapes.find((block) => block.id === id))
+        .filter(Boolean);
+
+      const hasAtLeastOnePlayableBlock = comboBlocks.some((block) =>
+        canBlockFitAnywhereOnBoard(block, currentBoard)
+      );
+
+      if (hasAtLeastOnePlayableBlock) {
+        return comboBlocks.map((shape, index) =>
+          createBlockInstance(shape, index)
+        );
+      }
+    }
+  }
+
+  const shuffledPlayableBlocks = [...playableBlocks].sort(
+    () => Math.random() - 0.5
+  );
+
+  const selectedBlocks = [];
+
+  selectedBlocks.push(shuffledPlayableBlocks[0]);
+
+  const otherBlocks = [...blockShapes].sort(() => Math.random() - 0.5);
+
+  for (const block of otherBlocks) {
+    if (selectedBlocks.length === 3) break;
+
+    selectedBlocks.push(block);
+  }
+
+  return selectedBlocks.map((shape, index) =>
+    createBlockInstance(shape, index)
+  );
+};
+
 
   const [board, setBoard] = useState(createEmptyBoard());
-  const [availableBlocks, setAvailableBlocks] = useState(getRandomBlocks());
+const [availableBlocks, setAvailableBlocks] = useState(() =>
+  getSmartBlocks(createEmptyBoard())
+);
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
 
@@ -109,17 +189,22 @@ const Game = () => {
     return false;
   };
 
-  const checkGameOver = (blocks, currentBoard) => {
-    const hasMove = blocks.some((block) =>
-      canPlaceBlockAnywhere(block, currentBoard)
-    );
+const checkGameOver = (blocks, currentBoard) => {
+  if (blocks.length === 0) {
+    playGameOverSound();
+    setIsGameOver(true);
+    return;
+  }
 
-    if (!hasMove) {
-        playGameOverSound();
-      setIsGameOver(true);
-    }
-  };
+  const hasMove = blocks.some((block) =>
+    canPlaceBlockAnywhere(block, currentBoard)
+  );
 
+  if (!hasMove) {
+    playGameOverSound();
+    setIsGameOver(true);
+  }
+};
   const showBonusText = (text) => {
     setBonusText(text);
 
@@ -128,14 +213,14 @@ const Game = () => {
     }, 1200);
   };
 
- const clearFullLines = (currentBoard) => {
-  const newBoard = currentBoard.map((row) => [...row]);
+  const clearFullLines = (currentBoard) => {
+  const finalBoard = currentBoard.map((row) => [...row]);
 
   const fullRows = [];
   const fullCols = [];
 
   for (let row = 0; row < 8; row++) {
-    const isFullRow = newBoard[row].every((cell) => cell !== 0);
+    const isFullRow = finalBoard[row].every((cell) => cell !== 0);
 
     if (isFullRow) {
       fullRows.push(row);
@@ -146,7 +231,7 @@ const Game = () => {
     let isFullCol = true;
 
     for (let row = 0; row < 8; row++) {
-      if (newBoard[row][col] === 0) {
+      if (finalBoard[row][col] === 0) {
         isFullCol = false;
         break;
       }
@@ -178,17 +263,18 @@ const Game = () => {
   }
 
   if (cellsToClear.length === 0) {
-    return newBoard;
+    return currentBoard;
   }
 
-playClearSound();
+  playClearSound();
+
   setClearingCells(cellsToClear);
 
   for (const cell of cellsToClear) {
-    newBoard[cell.row][cell.col] = 0;
+    finalBoard[cell.row][cell.col] = 0;
   }
 
-  const isBoardCompletelyEmpty = newBoard.every((row) =>
+  const isBoardCompletelyEmpty = finalBoard.every((row) =>
     row.every((cell) => cell === 0)
   );
 
@@ -203,33 +289,35 @@ playClearSound();
   });
 
   if (isBoardCompletelyEmpty) {
-      playFullClearSound();
+    playFullClearSound();
     showBonusText("FULL CLEAR +500");
   }
 
   setTimeout(() => {
     setClearingCells([]);
-    setBoard(newBoard);
+    setBoard(finalBoard);
   }, 260);
 
-  return currentBoard;
+  return finalBoard;
 };
 
 const placeBlock = (block, startRow, startCol) => {
-  let newBoard = board.map((row) => [...row]);
+  const newBoard = board.map((row) => [...row]);
   const cells = getBlockCells(block, startRow, startCol);
-for (const cell of cells) {
-  newBoard[cell.row][cell.col] = block.color;
-}
 
-playPlaceSound();
+  for (const cell of cells) {
+    newBoard[cell.row][cell.col] = block.color;
+  }
 
-setScore((prevScore) => prevScore + cells.length);
+  playPlaceSound();
 
-  const boardAfterClearCheck = clearFullLines(newBoard);
+  setScore((prevScore) => prevScore + cells.length);
 
-  setBoard(boardAfterClearCheck);
-  return boardAfterClearCheck;
+  setBoard(newBoard);
+
+  const finalBoard = clearFullLines(newBoard);
+
+  return finalBoard;
 };
   const clearPreview = () => {
     setPreviewCells([]);
@@ -296,10 +384,9 @@ setScore((prevScore) => prevScore + cells.length);
         (block) => block.instanceId !== droppedBlock.instanceId
       );
 
-      if (updatedBlocks.length === 0) {
-        updatedBlocks = getRandomBlocks();
-      }
-
+    if (updatedBlocks.length === 0) {
+  updatedBlocks = getSmartBlocks(updatedBoard);
+}
       setTimeout(() => {
 
         checkGameOver(updatedBlocks, updatedBoard);
@@ -308,9 +395,47 @@ setScore((prevScore) => prevScore + cells.length);
       return updatedBlocks;
     });
   };
+const handleTouchDrop = (droppedBlock, rowIndex, colIndex) => {
+  if (isGameOver) return;
+
+  const startRow = rowIndex - (droppedBlock.offsetRow || 0);
+  const startCol = colIndex - (droppedBlock.offsetCol || 0);
+
+  const canPlace = canPlaceBlock(droppedBlock, startRow, startCol);
+
+  if (!canPlace) {
+    clearPreview();
+    return;
+  }
+
+  const updatedBoard = placeBlock(droppedBlock, startRow, startCol);
+  clearPreview();
+
+  setAvailableBlocks((prevBlocks) => {
+    let updatedBlocks = prevBlocks.filter(
+      (block) => block.instanceId !== droppedBlock.instanceId
+    );
+
+    if (updatedBlocks.length === 0) {
+      updatedBlocks = getSmartBlocks(updatedBoard);
+    }
+
+    setTimeout(() => {
+      checkGameOver(updatedBlocks, updatedBoard);
+    }, 0);
+
+    return updatedBlocks;
+  });
+};
+
+
+
+
+
+
 const handleRestartGame = () => {
   setBoard(createEmptyBoard());
-  setAvailableBlocks(getRandomBlocks());
+ setAvailableBlocks(getSmartBlocks(createEmptyBoard()));
   setScore(0);
   setIsGameOver(false);
   setBonusText("");
@@ -318,7 +443,7 @@ const handleRestartGame = () => {
 };
   return (
     <main className="game-page">
-      <h1>Block Blast</h1>
+      <h1>Nazlı'nın Blokları</h1>
 
       <div className="score-box">
         <span>Skor</span>
@@ -339,7 +464,9 @@ const handleRestartGame = () => {
           onBlockDrop={handleBlockDrop}
         />
 
-        {!isGameOver && <BlockTray blocks={availableBlocks} />}
+        {!isGameOver && (
+  <BlockTray blocks={availableBlocks} onTouchDrop={handleTouchDrop} />
+)}
 
        {isGameOver && (
   <div className="game-over-box">

@@ -1,5 +1,7 @@
 const Cell = ({
   value,
+  rowIndex,
+  colIndex,
   previewColor,
   isInvalidPreview,
   isClearing,
@@ -28,6 +30,8 @@ const Cell = ({
   return (
     <div
       className={className}
+      data-row={rowIndex}
+      data-col={colIndex}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
