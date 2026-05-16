@@ -2,6 +2,12 @@ import { useState } from "react";
 import Board from "../components/Board";
 import BlockTray from "../components/BlockTray";
 import { blockShapes } from "../data/blockShapes";
+import {
+  playPlaceSound,
+  playClearSound,
+  playFullClearSound,
+  playGameOverSound,
+} from "../utils/soundEffects";
 
 const Game = () => {
   const createEmptyBoard = () => {
@@ -109,6 +115,7 @@ const Game = () => {
     );
 
     if (!hasMove) {
+        playGameOverSound();
       setIsGameOver(true);
     }
   };
@@ -174,6 +181,7 @@ const Game = () => {
     return newBoard;
   }
 
+playClearSound();
   setClearingCells(cellsToClear);
 
   for (const cell of cellsToClear) {
@@ -195,6 +203,7 @@ const Game = () => {
   });
 
   if (isBoardCompletelyEmpty) {
+      playFullClearSound();
     showBonusText("FULL CLEAR +500");
   }
 
@@ -209,12 +218,13 @@ const Game = () => {
 const placeBlock = (block, startRow, startCol) => {
   let newBoard = board.map((row) => [...row]);
   const cells = getBlockCells(block, startRow, startCol);
+for (const cell of cells) {
+  newBoard[cell.row][cell.col] = block.color;
+}
 
-  for (const cell of cells) {
-    newBoard[cell.row][cell.col] = block.color;
-  }
+playPlaceSound();
 
-  setScore((prevScore) => prevScore + cells.length);
+setScore((prevScore) => prevScore + cells.length);
 
   const boardAfterClearCheck = clearFullLines(newBoard);
 
@@ -291,6 +301,7 @@ const placeBlock = (block, startRow, startCol) => {
       }
 
       setTimeout(() => {
+
         checkGameOver(updatedBlocks, updatedBoard);
       }, 0);
 
