@@ -1,10 +1,10 @@
 import Block from "./Block";
-getra
+
 const BlockTray = ({ blocks }) => {
   return (
     <div className="block-tray">
       {blocks.map((block) => (
-        <Block key={block.instanceId} block={block} />
+        <Block key={block.instanceId || block.id} block={block} />
       ))}
     </div>
   );

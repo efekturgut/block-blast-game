@@ -53,6 +53,8 @@ const Game = () => {
   const [invalidPreviewCells, setInvalidPreviewCells] = useState([]);
   const [previewColor, setPreviewColor] = useState(null);
 
+  const [bonusText, setBonusText] = useState("");
+
   const getBlockCells = (block, startRow, startCol) => {
     const cells = [];
 
@@ -110,6 +112,14 @@ const Game = () => {
     }
   };
 
+  const showBonusText = (text) => {
+    setBonusText(text);
+
+    setTimeout(() => {
+      setBonusText("");
+    }, 1200);
+  };
+
   const clearFullLines = (currentBoard) => {
     const newBoard = currentBoard.map((row) => [...row]);
 
@@ -160,7 +170,23 @@ const Game = () => {
     }
 
     if (clearedCellCount > 0) {
-      setScore((prevScore) => prevScore + clearedCellCount * 10);
+      const isBoardCompletelyEmpty = newBoard.every((row) =>
+        row.every((cell) => cell === 0)
+      );
+
+      setScore((prevScore) => {
+        let extraScore = clearedCellCount * 10;
+
+        if (isBoardCompletelyEmpty) {
+          extraScore += 500;
+        }
+
+        return prevScore + extraScore;
+      });
+
+      if (isBoardCompletelyEmpty) {
+        showBonusText("FULL CLEAR +500");
+      }
     }
 
     return newBoard;
@@ -258,7 +284,14 @@ const Game = () => {
       return updatedBlocks;
     });
   };
-
+const handleRestartGame = () => {
+  setBoard(createEmptyBoard());
+  setAvailableBlocks(getRandomBlocks());
+  setScore(0);
+  setIsGameOver(false);
+  setBonusText("");
+  clearPreview();
+};
   return (
     <main className="game-page">
       <h1>Block Blast</h1>
@@ -267,6 +300,8 @@ const Game = () => {
         <span>Skor</span>
         <strong>{score}</strong>
       </div>
+
+      {bonusText && <div className="bonus-text">{bonusText}</div>}
 
       <div className="game-container">
         <Board
@@ -281,12 +316,16 @@ const Game = () => {
 
         {!isGameOver && <BlockTray blocks={availableBlocks} />}
 
-        {isGameOver && (
-          <div className="game-over-box">
-            <h2>Oyun Bitti</h2>
-            <p>Skorun: {score}</p>
-          </div>
-        )}
+       {isGameOver && (
+  <div className="game-over-box">
+    <h2>Oyun Bitti</h2>
+    <p>Skorun: {score}</p>
+
+    <button className="restart-game-btn" onClick={handleRestartGame}>
+      Tekrar Başla
+    </button>
+  </div>
+)}
       </div>
     </main>
   );
