@@ -1098,3 +1098,1028 @@ body {
     padding: 8px 12px;
   }
 }
+
+.game-page {
+  min-height: 100vh;
+  padding: 28px 16px 60px;
+  background:
+    radial-gradient(circle at top, rgba(79, 140, 255, 0.18), transparent 32%),
+    #121625;
+}
+
+.game-hero {
+  text-align: center;
+  margin: 34px auto 20px;
+  max-width: 720px;
+}
+
+.game-badge {
+  display: inline-flex;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(79, 140, 255, 0.13);
+  border: 1px solid rgba(79, 140, 255, 0.45);
+  color: #9dbdff;
+  font-size: 14px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+.game-hero h1 {
+  margin: 0;
+  font-size: clamp(38px, 5vw, 64px);
+  line-height: 1;
+  letter-spacing: -1.5px;
+}
+
+.game-hero p {
+  margin: 16px auto 0;
+  max-width: 560px;
+  color: #aeb7d8;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.play-layout {
+  width: min(1180px, 100%);
+  margin: 26px auto 0;
+  display: grid;
+  grid-template-columns: auto 340px;
+  align-items: start;
+  justify-content: center;
+  gap: 28px;
+}
+
+.game-container {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.22);
+  border-radius: 30px;
+  padding: 24px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.score-box {
+  margin: 0 auto 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.35);
+  border-radius: 20px;
+  padding: 14px 32px;
+}
+
+.score-box span {
+  color: #aeb7d8;
+}
+
+.score-box strong {
+  color: #ffffff;
+}
+
+.navbar {
+  width: min(1180px, calc(100% - 32px));
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  background: rgba(34, 38, 58, 0.78);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(128, 146, 194, 0.25);
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.25);
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  font-size: 22px;
+}
+
+.navbar-btn {
+  box-shadow: 0 8px 20px rgba(79, 140, 255, 0.28);
+}
+
+.leaderboard-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.22);
+  border-radius: 28px;
+  padding: 22px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  position: sticky;
+  top: 20px;
+}
+
+.leaderboard-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.leaderboard-header span {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: rgba(255, 217, 61, 0.15);
+  border: 1px solid rgba(255, 217, 61, 0.38);
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+}
+
+.leaderboard-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.leaderboard-header p {
+  margin: 3px 0 0;
+  color: #aeb7d8;
+  font-size: 14px;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.leaderboard-item {
+  display: grid;
+  grid-template-columns: 38px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 18px;
+  background: #181b2c;
+  border: 1px solid rgba(128, 146, 194, 0.18);
+}
+
+.leaderboard-rank {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  background: #30364f;
+  display: grid;
+  place-items: center;
+  font-weight: 900;
+  color: #aeb7d8;
+}
+
+.rank-1 {
+  background: rgba(255, 217, 61, 0.18);
+  color: #ffd93d;
+}
+
+.rank-2 {
+  background: rgba(77, 223, 255, 0.15);
+  color: #4ddfff;
+}
+
+.rank-3 {
+  background: rgba(255, 159, 67, 0.16);
+  color: #ff9f43;
+}
+
+.leaderboard-user {
+  min-width: 0;
+}
+
+.leaderboard-user strong {
+  display: block;
+  color: white;
+  font-size: 15px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.leaderboard-user small {
+  color: #7f89ad;
+  font-size: 12px;
+}
+
+.leaderboard-score {
+  color: #48d597;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.leaderboard-empty {
+  color: #aeb7d8;
+  background: #181b2c;
+  border-radius: 16px;
+  padding: 16px;
+  text-align: center;
+}
+
+.game-over-box {
+  background: rgba(255, 92, 122, 0.14);
+  border-color: rgba(255, 92, 122, 0.85);
+}
+
+@media (max-width: 980px) {
+  .play-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .leaderboard-card {
+    width: min(520px, 100%);
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .game-page {
+    padding: 16px 10px 40px;
+  }
+
+  .game-hero {
+    margin-top: 24px;
+  }
+
+  .game-hero h1 {
+    font-size: 38px;
+  }
+
+  .game-hero p {
+    font-size: 14px;
+  }
+
+  .game-badge {
+    font-size: 12px;
+  }
+
+  .play-layout {
+    gap: 18px;
+  }
+
+  .game-container {
+    padding: 12px;
+    border-radius: 24px;
+  }
+
+  .leaderboard-card {
+    padding: 16px;
+    border-radius: 22px;
+  }
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+.game-page {
+  min-height: 100vh;
+  padding: 24px 16px 50px;
+  background:
+    radial-gradient(circle at top, rgba(79, 140, 255, 0.16), transparent 30%),
+    #121625;
+}
+
+.game-hero {
+  text-align: center;
+  margin: 28px auto 18px;
+  max-width: 720px;
+}
+
+.play-layout {
+  width: min(1120px, calc(100% - 24px));
+  margin: 24px auto 0;
+  display: grid;
+  grid-template-columns: 700px 320px;
+  justify-content: center;
+  align-items: start;
+  gap: 24px;
+}
+
+.game-container {
+  width: 700px;
+  max-width: 100%;
+  margin: 0 auto;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.22);
+  border-radius: 28px;
+  padding: 22px;
+  box-sizing: border-box;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.30),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.leaderboard-card {
+  width: 320px;
+  max-width: 100%;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.22);
+  border-radius: 24px;
+  padding: 18px;
+  box-sizing: border-box;
+  box-shadow:
+    0 24px 70px rgba(0, 0, 0, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  overflow: visible;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: none;
+  overflow: visible;
+}
+
+.score-box {
+  margin: 0 auto 12px;
+  padding: 14px 28px;
+  border-radius: 18px;
+  width: fit-content;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+    #22263a;
+  border: 1px solid rgba(128, 146, 194, 0.30);
+}
+
+.navbar {
+  width: min(1120px, calc(100% - 24px));
+  margin: 18px auto 0;
+  padding: 14px 18px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1100px) {
+  .play-layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .game-container {
+    width: min(700px, 100%);
+  }
+
+  .leaderboard-card {
+    width: min(700px, 100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .game-page {
+    padding: 18px 10px 36px;
+  }
+
+  .game-container {
+    padding: 14px;
+    border-radius: 22px;
+  }
+
+  .leaderboard-card {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .navbar {
+    width: calc(100% - 20px);
+  }
+}
+/* === FINAL LAYOUT FIX === */
+
+:root {
+  --cell-size: 46px;
+  --cell-gap: 5px;
+  --tray-cell-size: 28px;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden !important;
+}
+
+body {
+  margin: 0;
+}
+
+.game-page {
+  min-height: 100vh;
+  padding: 14px 16px 30px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start !important;
+  background:
+    radial-gradient(circle at top, rgba(79, 140, 255, 0.14), transparent 28%),
+    #121625;
+}
+
+.navbar {
+  width: min(1050px, calc(100% - 32px)) !important;
+  margin: 12px auto 0 !important;
+  padding: 12px 18px !important;
+}
+
+.game-hero {
+  text-align: center;
+  margin: 18px auto 12px !important;
+  max-width: 620px;
+}
+
+.game-badge {
+  margin-bottom: 10px !important;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+}
+
+.game-hero h1 {
+  margin: 0 !important;
+  font-size: 48px !important;
+  line-height: 1 !important;
+}
+
+.game-hero p {
+  margin: 10px auto 0 !important;
+  max-width: 520px;
+  font-size: 15px !important;
+  line-height: 1.45 !important;
+}
+
+.score-box {
+  margin: 10px auto 14px !important;
+  padding: 10px 26px !important;
+  border-radius: 18px !important;
+}
+
+.score-box span {
+  font-size: 16px !important;
+}
+
+.score-box strong {
+  font-size: 28px !important;
+}
+
+.play-layout {
+  width: min(1000px, calc(100vw - 32px)) !important;
+  margin: 0 auto !important;
+  display: grid !important;
+  grid-template-columns: auto 300px !important;
+  justify-content: center !important;
+  align-items: start !important;
+  gap: 24px !important;
+}
+
+.game-container {
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 18px !important;
+  border-radius: 26px !important;
+  box-sizing: border-box !important;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    #22263a !important;
+  overflow: visible !important;
+}
+
+.board {
+  display: grid !important;
+  grid-template-columns: repeat(8, var(--cell-size)) !important;
+  grid-template-rows: repeat(8, var(--cell-size)) !important;
+  gap: var(--cell-gap) !important;
+  margin: 0 auto !important;
+}
+
+.cell {
+  width: var(--cell-size) !important;
+  height: var(--cell-size) !important;
+  border-radius: 11px !important;
+}
+
+.block-tray {
+  margin-top: 18px !important;
+  min-height: 90px !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 16px !important;
+}
+
+.block {
+  min-width: 92px !important;
+  min-height: 78px !important;
+  padding: 8px !important;
+  border-radius: 16px !important;
+}
+
+.block-grid {
+  gap: 4px !important;
+}
+
+.block-cell {
+  width: var(--tray-cell-size) !important;
+  height: var(--tray-cell-size) !important;
+  border-radius: 7px !important;
+}
+
+.leaderboard-card {
+  width: 300px !important;
+  max-width: 300px !important;
+  padding: 18px !important;
+  border-radius: 24px !important;
+  overflow: visible !important;
+  position: static !important;
+}
+
+.leaderboard-list {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+.leaderboard-item {
+  padding: 10px !important;
+}
+
+@media (max-width: 980px) {
+  .play-layout {
+    grid-template-columns: 1fr !important;
+    justify-items: center !important;
+  }
+
+  .leaderboard-card {
+    width: min(520px, 100%) !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --cell-size: 34px;
+    --cell-gap: 4px;
+    --tray-cell-size: 21px;
+  }
+
+  .game-page {
+    padding: 12px 8px 28px !important;
+  }
+
+  .game-hero {
+    margin-top: 14px !important;
+  }
+
+  .game-hero h1 {
+    font-size: 34px !important;
+  }
+
+  .game-hero p {
+    font-size: 13px !important;
+  }
+
+  .game-container {
+    padding: 12px !important;
+    border-radius: 22px !important;
+  }
+
+  .block-tray {
+    margin-top: 14px !important;
+    gap: 10px !important;
+    min-height: 68px !important;
+  }
+
+  .block {
+    min-width: 76px !important;
+    min-height: 64px !important;
+  }
+}
+/* === COLORFUL GAME POLISH === */
+
+.game-page {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(77, 223, 255, 0.18), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(255, 110, 199, 0.16), transparent 28%),
+    radial-gradient(circle at 50% 90%, rgba(72, 213, 151, 0.14), transparent 30%),
+    #101525 !important;
+}
+
+.game-hero {
+  position: relative;
+}
+
+.game-hero::before {
+  content: "";
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: rgba(79, 140, 255, 0.22);
+  filter: blur(70px);
+  border-radius: 999px;
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: -1;
+}
+
+.game-badge {
+  background: linear-gradient(135deg, rgba(79, 140, 255, 0.22), rgba(255, 110, 199, 0.18)) !important;
+  border: 1px solid rgba(157, 189, 255, 0.55) !important;
+  color: #dbe7ff !important;
+}
+
+.game-hero h1 {
+  background: linear-gradient(135deg, #ffffff, #9dbdff, #ff9fe0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none !important;
+}
+.score-box {
+  background:
+    linear-gradient(135deg, rgba(79, 140, 255, 0.22), rgba(255, 110, 199, 0.10)),
+    #22263a !important;
+  border: 1px solid rgba(157, 189, 255, 0.45) !important;
+  box-shadow:
+    0 18px 45px rgba(79, 140, 255, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.game-container {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    radial-gradient(circle at 20% 0%, rgba(77, 223, 255, 0.09), transparent 32%),
+    radial-gradient(circle at 90% 100%, rgba(255, 110, 199, 0.08), transparent 34%),
+    #22263a !important;
+  border: 1px solid rgba(157, 189, 255, 0.28) !important;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.36),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.cell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent),
+    #30364f !important;
+  border: 2px solid rgba(120, 138, 190, 0.55) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.block {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+    #171c30 !important;
+  border: 2px solid rgba(120, 138, 190, 0.35) !important;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.block:hover {
+  border-color: #4f8cff !important;
+  box-shadow:
+    0 18px 36px rgba(79, 140, 255, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.leaderboard-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    radial-gradient(circle at top right, rgba(255, 217, 61, 0.10), transparent 35%),
+    #22263a !important;
+  border: 1px solid rgba(157, 189, 255, 0.30) !important;
+  box-shadow:
+    0 28px 80px rgba(0, 0, 0, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.leaderboard-item {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.035), transparent),
+    #171c30 !important;
+  border: 1px solid rgba(128, 146, 194, 0.22) !important;
+  transition: 0.2s ease;
+}
+
+.leaderboard-item:hover {
+  transform: translateX(4px);
+  border-color: rgba(79, 140, 255, 0.55) !important;
+}
+
+.leaderboard-score {
+  color: #48d597 !important;
+  text-shadow: 0 0 18px rgba(72, 213, 151, 0.28);
+}
+
+.navbar {
+  background:
+    linear-gradient(135deg, rgba(34, 38, 58, 0.88), rgba(27, 32, 52, 0.88)) !important;
+  border: 1px solid rgba(157, 189, 255, 0.28) !important;
+}
+
+.navbar-logo {
+  background: linear-gradient(135deg, #ffffff, #9dbdff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.navbar-user {
+  color: #ffd93d !important;
+}
+
+.navbar-btn,
+.restart-game-btn {
+  background: linear-gradient(135deg, #4f8cff, #8b5cf6) !important;
+  box-shadow: 0 10px 24px rgba(79, 140, 255, 0.25);
+}
+
+.save-score-btn {
+  background: linear-gradient(135deg, #48d597, #4ddfff) !important;
+  color: #101525 !important;
+}
+
+.game-over-box {
+  background:
+    linear-gradient(135deg, rgba(255, 92, 122, 0.18), rgba(255, 159, 67, 0.10)) !important;
+  border: 1px solid rgba(255, 92, 122, 0.75) !important;
+}
+
+.hero-stats {
+  margin: 22px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 640px;
+}
+
+.hero-stat-card {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    rgba(34, 38, 58, 0.78);
+  border: 1px solid rgba(157, 189, 255, 0.22);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.20);
+}
+
+.hero-stat-card span {
+  display: block;
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.hero-stat-card strong {
+  display: block;
+  color: white;
+  font-size: 16px;
+}
+
+.hero-stat-card small {
+  color: #aeb7d8;
+  font-size: 12px;
+}
+
+@media (max-width: 700px) {
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === FILLED CELL COLORS FIX === */
+
+.cell.filled.blue {
+  background: linear-gradient(180deg, #68a2ff, #4f8cff) !important;
+  border-color: #8bb8ff !important;
+  box-shadow: 0 0 16px rgba(79, 140, 255, 0.35);
+}
+
+.cell.filled.green {
+  background: linear-gradient(180deg, #62e6ac, #48d597) !important;
+  border-color: #92f0c8 !important;
+  box-shadow: 0 0 16px rgba(72, 213, 151, 0.35);
+}
+
+.cell.filled.orange {
+  background: linear-gradient(180deg, #ffb35c, #ff9f43) !important;
+  border-color: #ffd09a !important;
+  box-shadow: 0 0 16px rgba(255, 159, 67, 0.35);
+}
+
+.cell.filled.purple {
+  background: linear-gradient(180deg, #ad78ff, #9b5cff) !important;
+  border-color: #c5a4ff !important;
+  box-shadow: 0 0 16px rgba(155, 92, 255, 0.35);
+}
+
+.cell.filled.red {
+  background: linear-gradient(180deg, #ff7590, #ff5c7a) !important;
+  border-color: #ff9fb0 !important;
+  box-shadow: 0 0 16px rgba(255, 92, 122, 0.35);
+}
+
+.cell.filled.yellow {
+  background: linear-gradient(180deg, #ffe56b, #ffd93d) !important;
+  border-color: #fff0a3 !important;
+  box-shadow: 0 0 16px rgba(255, 217, 61, 0.35);
+}
+
+.cell.filled.cyan {
+  background: linear-gradient(180deg, #69e8ff, #4ddfff) !important;
+  border-color: #a5f4ff !important;
+  box-shadow: 0 0 16px rgba(77, 223, 255, 0.35);
+}
+
+.cell.filled.pink {
+  background: linear-gradient(180deg, #ff8bd5, #ff6ec7) !important;
+  border-color: #ffc0e7 !important;
+  box-shadow: 0 0 16px rgba(255, 110, 199, 0.35);
+}
+
+.cell.filled.teal {
+  background: linear-gradient(180deg, #4ee7d4, #2dd4bf) !important;
+  border-color: #99f6e4 !important;
+  box-shadow: 0 0 16px rgba(45, 212, 191, 0.35);
+}
+/* === ARCADE ARENA THEME === */
+
+.game-page {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(77, 223, 255, 0.22), transparent 26%),
+    radial-gradient(circle at 85% 12%, rgba(255, 110, 199, 0.20), transparent 28%),
+    radial-gradient(circle at 50% 95%, rgba(155, 92, 255, 0.20), transparent 30%),
+    linear-gradient(180deg, #0b1020, #121625 55%, #090d18) !important;
+}
+
+.navbar {
+  background: rgba(15, 21, 38, 0.78) !important;
+  border: 1px solid rgba(120, 150, 255, 0.35) !important;
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.35),
+    0 0 35px rgba(79, 140, 255, 0.10) !important;
+}
+
+.game-hero {
+  margin-top: 20px !important;
+  margin-bottom: 10px !important;
+}
+
+.game-badge {
+  background: rgba(77, 223, 255, 0.12) !important;
+  border: 1px solid rgba(77, 223, 255, 0.45) !important;
+  color: #8aecff !important;
+}
+
+.game-hero h1 {
+  font-size: 56px !important;
+  background: linear-gradient(135deg, #ffffff, #4ddfff, #ff6ec7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.game-hero p {
+  color: #b9c5ef !important;
+}
+
+.score-box {
+  background:
+    linear-gradient(135deg, rgba(77, 223, 255, 0.16), rgba(255, 110, 199, 0.12)),
+    rgba(28, 34, 58, 0.95) !important;
+  border: 1px solid rgba(157, 189, 255, 0.45) !important;
+  box-shadow: 0 0 35px rgba(77, 223, 255, 0.12) !important;
+}
+
+.game-container,
+.leaderboard-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.015)),
+    rgba(29, 35, 60, 0.96) !important;
+  border: 1px solid rgba(157, 189, 255, 0.30) !important;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.42),
+    0 0 60px rgba(79, 140, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.cell {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent),
+    #29314d !important;
+  border-color: rgba(135, 155, 210, 0.60) !important;
+}
+
+.leaderboard-header h2 {
+  color: #ffffff !important;
+}
+
+.leaderboard-header p {
+  color: #9dbdff !important;
+}
+
+.leaderboard-item {
+  background:
+    linear-gradient(135deg, rgba(77, 223, 255, 0.05), rgba(255, 110, 199, 0.035)),
+    #141a2e !important;
+  border: 1px solid rgba(157, 189, 255, 0.20) !important;
+}
+
+.leaderboard-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(77, 223, 255, 0.55) !important;
+  box-shadow: 0 14px 28px rgba(77, 223, 255, 0.10);
+}
+
+.block {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent),
+    #11172a !important;
+  border: 2px solid rgba(135, 155, 210, 0.32) !important;
+}
+
+.block:hover {
+  transform: translateY(-3px);
+  border-color: rgba(77, 223, 255, 0.70) !important;
+}
+
+/* === DRAG GHOST VISIBILITY FIX === */
+
+.drag-ghost,
+.touch-drag-ghost {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: grid !important;
+  pointer-events: none !important;
+  z-index: 99999 !important;
+  opacity: 1 !important;
+  will-change: transform !important;
+}
+
+.ghost-cell {
+  width: var(--cell-size) !important;
+  height: var(--cell-size) !important;
+  border-radius: 11px !important;
+}
+
+.ghost-cell.empty {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.ghost-cell.blue {
+  background: linear-gradient(180deg, #68a2ff, #4f8cff) !important;
+}
+
+.ghost-cell.green {
+  background: linear-gradient(180deg, #62e6ac, #48d597) !important;
+}
+
+.ghost-cell.orange {
+  background: linear-gradient(180deg, #ffb35c, #ff9f43) !important;
+}
+
+.ghost-cell.purple {
+  background: linear-gradient(180deg, #ad78ff, #9b5cff) !important;
+}
+
+.ghost-cell.red {
+  background: linear-gradient(180deg, #ff7590, #ff5c7a) !important;
+}
+
+.ghost-cell.yellow {
+  background: linear-gradient(180deg, #ffe56b, #ffd93d) !important;
+}
+
+.ghost-cell.cyan {
+  background: linear-gradient(180deg, #69e8ff, #4ddfff) !important;
+}
+
+.ghost-cell.pink {
+  background: linear-gradient(180deg, #ff8bd5, #ff6ec7) !important;
+}
+
+.ghost-cell.teal {
+  background: linear-gradient(180deg, #4ee7d4, #2dd4bf) !important;
+}

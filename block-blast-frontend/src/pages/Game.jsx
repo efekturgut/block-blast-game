@@ -4,7 +4,7 @@ import BlockTray from "../components/BlockTray";
 import { blockShapes } from "../data/blockShapes";
 import { saveScore } from "../services/scoreService";
 import { useAuth } from "../context/AuthContext";
-
+import Leaderboard from "../components/Leaderboard";
 import {
   playPlaceSound,
   playClearSound,
@@ -138,9 +138,11 @@ const [availableBlocks, setAvailableBlocks] = useState(() =>
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
 
-  const { user, token } = useAuth();
+ 
   const [scoreSaved, setScoreSaved] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+
+  const { user, token, isAuthenticated } = useAuth();
 
 
   const [previewCells, setPreviewCells] = useState([]);
@@ -437,7 +439,6 @@ const handleTouchDrop = (droppedBlock, rowIndex, colIndex) => {
 };
 
 
-
 const handleSaveScore = async () => {
   if (!isAuthenticated) {
     setSaveMessage("Skor kaydetmek için giriş yapmalısın.");
@@ -445,10 +446,10 @@ const handleSaveScore = async () => {
   }
 
   try {
-    await saveScore(score);
+    const data = await saveScore(score, token);
 
     setScoreSaved(true);
-    setSaveMessage("Skor başarıyla kaydedildi.");
+    setSaveMessage(data.message || "Skor kaydedildi.");
   } catch (error) {
     console.error("Skor kaydedilemedi:", error);
     setSaveMessage("Skor kaydedilemedi.");
@@ -466,23 +467,51 @@ const handleRestartGame = () => {
   setSaveMessage("");
   clearPreview();
 };
-  return (
-    <main className="game-page">
+return (
+  <main className="game-page">
+    <section className="game-hero">
+      <span className="game-badge">Puzzle • Skor • Rekabet</span>
       <h1>Nazlı'nın Blokları</h1>
+      <p>
+        Blokları yerleştir, satırları ve sütunları patlat, liderlik tablosunda
+        zirveye çık.
+      </p>
 
-      <div className="score-box">
-        <span>Skor</span>
-        <strong>{score}</strong>
-      </div>
+      <div className="hero-stats">
+  <div className="hero-stat-card">
+    <span>🎮</span>
+    <strong>Oyna</strong>
+    <small>Blokları yerleştir</small>
+  </div>
 
-      {bonusText && <div className="bonus-text">{bonusText}</div>}
+  <div className="hero-stat-card">
+    <span>💥</span>
+    <strong>Patlat</strong>
+    <small>Satır ve sütunları temizle</small>
+  </div>
 
+  <div className="hero-stat-card">
+    <span>🏆</span>
+    <strong>Yüksel</strong>
+    <small>Liderlikte zirveye çık</small>
+  </div>
+</div>
+    </section>
+
+    <div className="score-box">
+      <span>Skor</span>
+      <strong>{score}</strong>
+    </div>
+
+    {bonusText && <div className="bonus-text">{bonusText}</div>}
+
+    <section className="play-layout">
       <div className="game-container">
         <Board
           board={board}
           previewCells={previewCells}
           invalidPreviewCells={invalidPreviewCells}
-           clearingCells={clearingCells}
+          clearingCells={clearingCells}
           previewColor={previewColor}
           onBlockDragOver={handleBlockDragOver}
           onBlockDragLeave={handleBlockDragLeave}
@@ -490,42 +519,47 @@ const handleRestartGame = () => {
         />
 
         {!isGameOver && (
-  <BlockTray blocks={availableBlocks} onTouchDrop={handleTouchDrop} />
-)}
+          <BlockTray blocks={availableBlocks} onTouchDrop={handleTouchDrop} />
+        )}
 
-{isGameOver && (
-  <div className="game-over-box">
-    <h2>Oyun Bitti</h2>
-    <p>Skorun: {score}</p>
+        {isGameOver && (
+          <div className="game-over-box">
+            <h2>Oyun Bitti</h2>
+            <p>Skorun: {score}</p>
 
-    {isAuthenticated ? (
-      <p className="logged-user-score">
-        Skor şu kullanıcıya kaydedilecek: <strong>{user.username}</strong>
-      </p>
-    ) : (
-      <p className="logged-user-score">
-        Skor kaydetmek için giriş yapmalısın.
-      </p>
-    )}
+            {isAuthenticated ? (
+              <p className="logged-user-score">
+                Skor şu kullanıcıya kaydedilecek:{" "}
+               <strong>{user?.username}</strong>
+              </p>
+            ) : (
+              <p className="logged-user-score">
+                Skor kaydetmek için giriş yapmalısın.
+              </p>
+            )}
 
-    <button
-      className="save-score-btn"
-      onClick={handleSaveScore}
-      disabled={scoreSaved}
-    >
-      {scoreSaved ? "Skor Kaydedildi" : "Skoru Kaydet"}
-    </button>
+            <button
+              className="save-score-btn"
+              onClick={handleSaveScore}
+              disabled={scoreSaved}
+            >
+              {scoreSaved ? "Skor Kaydedildi" : "Skoru Kaydet"}
+            </button>
 
-    {saveMessage && <p className="save-message">{saveMessage}</p>}
+            {saveMessage && <p className="save-message">{saveMessage}</p>}
 
-    <button className="restart-game-btn" onClick={handleRestartGame}>
-      Tekrar Başla
-    </button>
-  </div>
-)}
+            <button className="restart-game-btn" onClick={handleRestartGame}>
+              Tekrar Başla
+            </button>
+          </div>
+        )}
       </div>
-    </main>
-  );
-};
 
+      <Leaderboard />
+    </section>
+  </main>
+
+  
+);
+}
 export default Game;

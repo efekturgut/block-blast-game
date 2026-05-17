@@ -1,3 +1,14 @@
+let soundEnabled = localStorage.getItem("soundEnabled") !== "false";
+
+export const setSoundEnabled = (value) => {
+  soundEnabled = value;
+  localStorage.setItem("soundEnabled", String(value));
+};
+
+export const getSoundEnabled = () => {
+  return soundEnabled;
+};
+
 let audioContext = null;
 
 const getAudioContext = () => {
@@ -9,6 +20,7 @@ const getAudioContext = () => {
 };
 
 const playTone = (frequency, duration, type = "sine", volume = 0.08) => {
+   if (!soundEnabled) return;
   const ctx = getAudioContext();
 
   const oscillator = ctx.createOscillator();

@@ -2,9 +2,7 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/scores";
 
-export const saveScore = async (score) => {
-  const token = localStorage.getItem("token");
-
+export const saveScore = async (score, token) => {
   const response = await axios.post(
     API_URL,
     { score },
