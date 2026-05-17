@@ -141,6 +141,7 @@ const [availableBlocks, setAvailableBlocks] = useState(() =>
  
   const [scoreSaved, setScoreSaved] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [leaderboardRefreshKey, setLeaderboardRefreshKey] = useState(0);
 
   const { user, token, isAuthenticated } = useAuth();
 
@@ -450,28 +451,20 @@ const handleSaveScore = async () => {
 
     setScoreSaved(true);
     setSaveMessage(data.message || "Skor kaydedildi.");
+
+    setLeaderboardRefreshKey((prevKey) => prevKey + 1);
   } catch (error) {
     console.error("Skor kaydedilemedi:", error);
     setSaveMessage("Skor kaydedilemedi.");
   }
 };
 
-const handleRestartGame = () => {
-  setBoard(createEmptyBoard());
-  setAvailableBlocks(getSmartBlocks(createEmptyBoard()));
-  setScore(0);
-  setIsGameOver(false);
-  setBonusText("");
-  
-  setScoreSaved(false);
-  setSaveMessage("");
-  clearPreview();
-};
+
 return (
   <main className="game-page">
     <section className="game-hero">
       <span className="game-badge">Puzzle • Skor • Rekabet</span>
-      <h1>Nazlı'nın Blokları</h1>
+      <h1>Block Blast</h1>
       <p>
         Blokları yerleştir, satırları ve sütunları patlat, liderlik tablosunda
         zirveye çık.
@@ -521,41 +514,55 @@ return (
         {!isGameOver && (
           <BlockTray blocks={availableBlocks} onTouchDrop={handleTouchDrop} />
         )}
+{isGameOver && (
+  <div className="game-over-modal-overlay">
+    <div className="game-over-modal">
+      <div className="game-over-icon">💥</div>
 
-        {isGameOver && (
-          <div className="game-over-box">
-            <h2>Oyun Bitti</h2>
-            <p>Skorun: {score}</p>
+      <h2>Oyun Bitti</h2>
 
-            {isAuthenticated ? (
-              <p className="logged-user-score">
-                Skor şu kullanıcıya kaydedilecek:{" "}
-               <strong>{user?.username}</strong>
-              </p>
-            ) : (
-              <p className="logged-user-score">
-                Skor kaydetmek için giriş yapmalısın.
-              </p>
-            )}
+      <p className="modal-score-text">
+        Skorun: <strong>{score}</strong>
+      </p>
 
-            <button
-              className="save-score-btn"
-              onClick={handleSaveScore}
-              disabled={scoreSaved}
-            >
-              {scoreSaved ? "Skor Kaydedildi" : "Skoru Kaydet"}
-            </button>
+      {isAuthenticated ? (
+        <p className="logged-user-score">
+          Skor şu kullanıcıya kaydedilecek: <strong>{user?.username}</strong>
+        </p>
+      ) : (
+        <p className="logged-user-score">
+          Skor kaydetmek için giriş yapmalısın.
+        </p>
+      )}
 
-            {saveMessage && <p className="save-message">{saveMessage}</p>}
+      <div className="modal-actions">
+        <button
+          type="button"
+          className="save-score-btn"
+          onClick={handleSaveScore}
+          disabled={scoreSaved}
+        >
+          {scoreSaved ? "Skor Kaydedildi" : "Skoru Kaydet"}
+        </button>
 
-            <button className="restart-game-btn" onClick={handleRestartGame}>
-              Tekrar Başla
-            </button>
-          </div>
-        )}
+        <button
+          type="button"
+          className="restart-game-btn"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Tekrar Oyna
+        </button>
       </div>
 
-      <Leaderboard />
+      {saveMessage && <p className="save-message">{saveMessage}</p>}
+    </div>
+  </div>
+)}
+      </div>
+
+      <Leaderboard refreshKey={leaderboardRefreshKey} />
     </section>
   </main>
 

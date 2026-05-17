@@ -18,7 +18,7 @@ const Navbar = () => {
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
         <span className="logo-icon">🧩</span>
-        Nazlı'nın Blokları
+        Block Blast
       </Link>
 
       <div className="navbar-links">

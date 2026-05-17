@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getScores } from "../services/scoreService";
 
-const Leaderboard = () => {
+const Leaderboard = ({ refreshKey }) => {
   const [scores, setScores] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,7 +18,7 @@ const Leaderboard = () => {
 
   useEffect(() => {
     fetchScores();
-  }, []);
+  }, [refreshKey]);
 
   return (
     <aside className="leaderboard-card">
